@@ -1,0 +1,55 @@
+.history_table
+{
+    margin-bottom: 0 !important;
+    tr
+    {
+        th
+        {
+            font-weight: 400;
+            color: #949ba9;
+            font-size: 16px;
+            padding: 20px 15px !important; 
+            text-transform: uppercase;
+        }
+        td
+        {
+            font-weight: 400;
+            color: #fff;
+            font-size: 14px;
+            background-color: none;
+            padding: 24px 15px !important; 
+        }
+    }
+
+    tbody
+    {
+        tr:nth-of-type(odd) {
+            background-color: #1f2430 !important;
+        }
+
+        .company_logo
+        {
+            width: 120px;
+        }
+
+        .actions_part
+        {
+            display: block;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 0;
+            li
+            {
+                display: inline-block;
+                padding: 0 8px;
+                svg{
+                    width: 24px;
+                    height: 24px;
+                    color: #949ba9;
+                }
+                
+            }
+        }
+    }
+}

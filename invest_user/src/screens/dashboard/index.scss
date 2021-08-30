@@ -1,0 +1,115 @@
+.pg_title h3
+{
+    color: #fff;
+    font-size: 30px;
+    line-height: 30px;
+    font-weight: 300;
+    padding-bottom: 20px;
+    margin: 0;
+    padding-top:40px;
+}
+
+table.history_table
+{
+    margin-bottom: 0 !important;
+    tr {
+        th {
+            font-weight: 400;
+            color: #949ba9;
+            font-size: 16px;
+            padding: 20px 15px !important; 
+        }
+        
+        td {
+            font-weight: 400;
+            color: #fff;
+            font-size: 14px;
+            background-color: none;
+            padding: 24px 15px !important; 
+        }
+    }
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: #1f2430 !important;
+}
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th
+{
+    border:none !important;
+}
+
+
+
+.updt_inn
+{
+    padding-top: 55px;
+    padding-right: 10px;
+    .updt_head
+    {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #1f2430;
+        span{
+            display: inline-block;
+        }
+        .updt_dt
+        {
+            padding-left: 25px;
+            color: #949ba9;
+            font-size: 12px;
+            vertical-align: bottom;
+        }
+    }
+    .updt_cont
+    {
+        padding-top: 28px;
+        h3
+        {
+            color: #fff;
+            font-weight: 600;
+            font-size: 18px;
+            margin: 0;
+            padding-top: 28px;
+            padding-bottom: 16px;
+        }
+        p
+        {
+            color: #949ba9;
+            font-size: 14px;
+            text-align: justify;
+            line-height: 20px;
+        }
+        .updt_link
+        {
+            padding-top: 14px;
+            a 
+            {
+                font-size: 16px;
+                color: #fff;
+                font-weight: 600;
+                vertical-align: middle;
+                span {
+                    padding-right: 5px;
+                }
+            }
+            a:hover
+            {
+                color: #01bef5;
+            }
+        }
+
+        .more_link
+        {
+            padding-top: 28px;
+            a {
+                color: #01bef5;
+                font-size: 12px;
+            }
+
+            a:hover
+            {
+                color: #fff;
+            }
+        }
+    }
+}

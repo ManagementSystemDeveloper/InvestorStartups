@@ -1,0 +1,1 @@
+export const INVESTOR_LIST_ALL = "[INVESTOR] LIST_ALL";   

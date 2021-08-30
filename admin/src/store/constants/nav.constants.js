@@ -1,0 +1,11 @@
+export const NAV_INVESTOR_ALL = "[NAV] INVESTOR_ALL";
+export const NAV_INVESTOR_ADD = "[NAV] INVESTOR_ADD";
+export const NAV_STARTUP_ALL = "[NAV] STARTUP_ALL";
+export const NAV_STARTUP_ADD = "[NAV] STARTUP_ADD";
+export const NAV_UPDATE_LIST = "[NAV] UPDATE_LIST";
+export const NAV_UPDATE_EDIT = "[NAV] UPDATE_EDIT";
+export const NAV_INVEST_ALL = "[NAV] INVEST_ALL";   
+export const NAV_INVEST_ADD = "[NAV] INVEST_ADD";   
+
+
+export const UPDATE_NAV_MENU_ACTIVE = "[NAV] UPDATE_ACTIVE_STATUS";

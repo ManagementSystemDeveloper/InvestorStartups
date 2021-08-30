@@ -1,0 +1,1 @@
+export const CREATE_DONE_SUCCESS = "[CREATE] DONE_SUCCESS";
