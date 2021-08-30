@@ -5,3 +5,6 @@ export const UPDATE_INVESTOR_PROFILE_URL = BASE_URL + "/v1/admin/investor/update
 export const UPDATE_INVESTOR_PASSWORD_URL = BASE_URL + "/v1/admin/investor/update-password";
 export const UPDATE_INVESTOR_DELETE_URL = BASE_URL + "/v1/admin/investor/remove";
 export const GET_ALL_INVESTOR_URL = BASE_URL + "/v1/admin/investor/all";
+
+export const CREATE_COMPANY_URL = BASE_URL + "/v1/admin/startup/add";
+export const GET_ALL_COMPANY_URL = BASE_URL + "/v1/admin/startup/all";

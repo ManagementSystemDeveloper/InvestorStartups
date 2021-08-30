@@ -1,17 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from '../shared_comps/footer';
 import { Modal, Button, Form, InputGroup } from 'react-bootstrap';
 import './index.scss';
 import SideBar from '../shared_comps/sidebar';
 import Files from 'react-files';
 import { NAV_STARTUP_ADD } from '../../store/constants';
+import { useDispatch, useSelector } from "react-redux";
+import { NAV_INVESTOR_ADD, CREATE_DONE_SUCCESS } from '../../store/constants';
+import { toast } from 'react-toastify';
+import { companyActions, toastActions } from "../../store/actions";
+import DashBoardHeader from '../shared_comps/dashheader';
+
 function AddCompany()
 {
-
-    const [email, setEmail] = useState('');
     const [companyName, setCompanyName] = useState('');
     const [companySite, setCompanySite] = useState('');
     const [logoFile, setLogoFile] = useState(null);
+
+    const showLoading = useSelector(state => state.loadingReducer.loading_show);
+    const showToast = useSelector(state => state.toastReducer.toast_show);
+    const toastMsg = useSelector(state => state.toastReducer.toast_msg);
+    const token = useSelector(state => state.authReducer.token);
+    const needFormClear = useSelector(state => state.createReducer.create_success_clear_form);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if(showToast)
+        {
+            toast.error(toastMsg);
+            dispatch(toastActions.hideToast());
+        }
+
+        if(needFormClear)
+        {
+            setCompanyName('');
+            setCompanySite('');
+            dispatch({type:CREATE_DONE_SUCCESS, payload:false});
+        }
+
+    }, [showToast, toastMsg, needFormClear]);
 
     const onFilesChange = (files) => {
         if(files.length > 0) {
@@ -44,19 +72,40 @@ function AddCompany()
         }
     }
 
+    const onFormSubmit = (e) => {
+        e.preventDefault();
+        if(companyName.length === 0)
+        {
+            dispatch(toastActions.showToast("Company Name is required"));
+            return;
+        }
+
+        if(companySite.length === 0)
+        {
+            dispatch(toastActions.showToast("Website URL is required"));
+            return;
+        }
+
+        if(!logoFile)
+        {
+            dispatch(toastActions.showToast("Logo file is required"));
+            return;
+        }
+
+        const formData = new FormData();
+        
+        formData.append("files", logoFile);
+        formData.append("name", companyName);
+        formData.append("website", companySite);
+
+        dispatch(companyActions.createCompany(formData, token.accessToken));
+    }
+
     return (
         <>
         <SideBar activeItem={NAV_STARTUP_ADD}/>
         <div className="main_admin_part">
-            <header>
-                <div className="admin_header">
-                    <div className="container-fluid">
-                        <div className="hd_searchbox">
-                            <input type="search" className="searchbox" placeholder="Search"/> 
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <DashBoardHeader/>
         
             <section className="main_page">
                 <div className="container-fluid">
@@ -113,7 +162,7 @@ function AddCompany()
                     </Form.Group>
 
 
-                    <Button className="submit_btn"> Create </Button>
+                    <Button className="submit_btn" onClick={onFormSubmit}> Create </Button>
                     </Form>
                 </div>
             </section>

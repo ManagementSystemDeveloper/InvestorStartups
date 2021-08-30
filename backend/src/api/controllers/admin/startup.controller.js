@@ -5,7 +5,7 @@ const StartUp = require('../../models/startup.model');
 exports.createStartup = async (req, res, next) => {
     try {
         //todo upload and save image file here
-        if (!req.files || Object.keys(req.files).length === 0) {
+        if (!req.files.files || Object.keys(req.files.files).length === 0) {
             return next(new APIError({
                 status: httpStatus.CONFLICT,
                 message: 'Picture File is not uploaded'
@@ -13,9 +13,10 @@ exports.createStartup = async (req, res, next) => {
         }
 
         // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-        const logo = req.files.logo_file;
+        const logo = req.files.files;
         const uploadPath = __dirname + '/uploads/' + logo.name;
 
+        console.log(logo);
         // Use the mv() method to place the file somewhere on your server
         logo.mv(uploadPath, async (err) => {
             if (err)
@@ -23,7 +24,9 @@ exports.createStartup = async (req, res, next) => {
                 message: 'File Upload Failed',
                 status: httpStatus.INTERNAL_SERVER_ERROR,
             }));
-            const createReq = omit(req.body, 'logo_file');
+            
+            // const createReq = omit(req.body, 'logo_file');
+            var createReq = req.body;
             createReq.logo = uploadPath;
             const startup = await new StartUp(createReq).save();
             const startupTransformed = startup.transform();
@@ -41,6 +44,7 @@ exports.getAllStartup = async (req, res, next) => {
     const startups = await StartUp.list(req.body);
     const transformedStartUps = startups.map((startup) => {
         startup = startup.transform();
+        console.log(startup);
       return startup;
     });
 

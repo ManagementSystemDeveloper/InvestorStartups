@@ -1,20 +1,43 @@
-import React, { useState }  from "react";
+import React, { useEffect, useState }  from "react";
 import SideBar from '../shared_comps/sidebar';
 import Footer from '../shared_comps/footer';
 import CompanyItem from "./company_item";
+import { useDispatch, useSelector } from "react-redux";
+import { companyActions, toastActions } from '../../store/actions';
 import CompanyEditModalDialog from './company_edit_modal';
 import CompanyDeleteModalDialog from './company_delete_modal';
 import {history} from '../../helpers';
+import DashBoardHeader from '../shared_comps/dashheader';
+import { toast } from 'react-toastify';
 
 import './index.scss';
 import { NAV_STARTUP_ALL } from "../../store/constants";
 function CompanyAll()
 {
-    
+    const token = useSelector(state => state.authReducer.token);
+    const companyInfos = useSelector(state => state.companyReducer.companies);
+    const showToast = useSelector(state => state.toastReducer.toast_show);
+    const toastMsg = useSelector(state => state.toastReducer.toast_msg);
+
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
-    
-    const companyInfos = [{},{},{}]
+    const [firstLoad, setIsFirstLoad] = useState(true);
+
+    useEffect(() => {
+        if(firstLoad)
+        {
+            dispatch(companyActions.getAllCompany(token.accessToken));
+            setIsFirstLoad(false);
+        }
+
+        if(showToast)
+        {
+            toast.error(toastMsg);
+            dispatch(toastActions.hideToast());
+        }
+
+
+    }, [firstLoad, token, showToast]);
     
     const handleDeleteModalClose = () => {
         setShowDeleteModal(false);
@@ -35,12 +58,15 @@ function CompanyAll()
     const onClickAddUpdateItem = (index) => {
         history.push({pathname:'/update/edit'});
     }
+
+    const dispatch = useDispatch();
     
     return (
         <>
         <SideBar activeItem={NAV_STARTUP_ALL}/>
         <div className="main_admin_part">
-            <header>
+            <DashBoardHeader/>
+            {/* <header>
                 <div className="admin_header">
                     <div className="container-fluid">
                         <div className="hd_searchbox">
@@ -48,7 +74,7 @@ function CompanyAll()
                         </div>
                     </div>
                 </div>
-            </header>
+            </header> */}
         
             <section className="history_section main_page">
                 <div className="container-fluid">

@@ -29,7 +29,10 @@ router.route('/investor/all')
       .get(authorize(ADMIN), investorController.getAllUser);
 
 router.route('/startup/add')
-      .get(authorize(ADMIN), startupController.createStartup);
+      .post(authorize(ADMIN), startupController.createStartup);
+
+router.route('/startup/all')
+      .get(authorize(ADMIN), startupController.getAllStartup);
 
 router.route('/')
       .get(controller.getAdmins);

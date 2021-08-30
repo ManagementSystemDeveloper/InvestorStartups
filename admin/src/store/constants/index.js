@@ -6,3 +6,4 @@ export * from "./auth.constants";
 export * from "./api.constants";
 export * from "./create.constants";
 export * from "./investors.constants";
+export * from "./companies.constants";
