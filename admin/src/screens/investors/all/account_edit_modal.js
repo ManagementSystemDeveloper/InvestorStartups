@@ -11,7 +11,7 @@ function AccountEditModalDialog({defaultVal, closeHandler, account = null})
     const showToast = useSelector(state => state.toastReducer.toast_show);
     const toastMsg = useSelector(state => state.toastReducer.toast_msg);
     
-    const [validEmail, setIsValidEmail] = useState(false);
+    const [validEmail, setIsValidEmail] = useState(true);
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [user_name, setUserName] = useState('');
