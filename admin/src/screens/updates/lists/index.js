@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import Footer from "../../shared_comps/footer";
-import work180 from "../../../assets/images/work180.png";
+import { IMAGE_URL } from '../../../store/constants';
 
 import {FaInternetExplorer} from 'react-icons/fa';
 import './index.scss';
@@ -10,73 +10,63 @@ import StartUpEntryTabContent from './tab_content';
 import ReactPaginate from 'react-paginate';
 import SideBar from '../../shared_comps/sidebar';
 import { NAV_STARTUP_ALL } from '../../../store/constants';
-function StartUpLists(){
-    const [currentActiveArticle, setCurrentActiveArticle] = useState(null);
+import queryString from 'query-string';
+import { useDispatch, useSelector } from "react-redux";
+import { updateAction } from "../../../store/actions/index";
+import _ from 'lodash';
+import DashBoardHeader from '../../shared_comps/dashheader';
 
-    const startUpHistoryEntries = [
+function StartUpLists() {
+   
+    const company_data = queryString.parse(window.location.href);
+    const company_id = company_data[Object.keys(company_data)[0]];
+
+    const token = useSelector(state => state.authReducer.token);
+    const updateInfos = useSelector(state => state.updateReducer.updates);
+    const needUpdateDataProvider = useSelector(state => state.updateReducer.needRefresh);
+
+    const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const [currentActiveArticleIndex, setCurrentActiveArticleIndex] = useState(0);
+    const [isFirstLaunch, setIsFirstLaunch] = useState(true);
+    const [updateDataProvider, setUpdateDataProvider] = useState([]);
+    const [image_src, setImageSrc] = useState('');
+    const [site_link, setSiteLink] = useState('');
+
+    const dispatch = useDispatch();
+
+
+    useEffect(() => {
+
+        if(isFirstLaunch)
         {
-            id:'1',
-            name:'WORK180 December 2018 Report',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
-        },
-        {
-            id:'2',
-            name:'WORK180 December 2018 Report',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
-        },
-        {
-            id:'3',
-            name:'WORK180 December 2018 Report',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
-        },
-        {
-            id:'4',
-            name:'WORK180 December 2018 Report',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
+            dispatch(updateAction.getUpdatesByStartUpId(token.accessToken, company_id));
+            setIsFirstLaunch(false);
         }
 
-    ];
-
-
-    const startUpHistoryDetails = [
+        if(needUpdateDataProvider)
         {
-            id:'1',
-            name:'WORK180 December 2018 Report',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
-        },
-        {
-            id:'2',
-            name:'Unique Experience',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
-        },
-        {
-            id:'3',
-            name:'Crafting Virtual World',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
-        },
-        {
-            id:'4',
-            name:'WORK180 December 2018 Report',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
+            setUpdateDataProvider(_.chunk(updateInfos, 3));
+            dispatch(updateAction.stopUpdateUI());
+            setCurrentPageIndex(0);
         }
 
-    ];
-
+        if(updateInfos && updateInfos.length > 0 && updateDataProvider && updateDataProvider.length > 0) {
+            const image_url = IMAGE_URL + updateDataProvider[currentPageIndex][currentActiveArticleIndex].company_detail.logo;
+            const link_address = updateDataProvider[currentPageIndex][currentActiveArticleIndex].company_detail.website;
+            setImageSrc(image_url);
+            setSiteLink(link_address);
+        }
+    });
+    
     const onClickEntryHandler = (item) => {
-        setCurrentActiveArticle(item);
+        const activeIndex = _.findIndex(updateDataProvider[currentPageIndex], ['id', item.id]);
+        setCurrentActiveArticleIndex(activeIndex);
     }
 
 
     const onChangePage = (pageIndex) => {
-        
+        setCurrentPageIndex(pageIndex.selected);
+        setCurrentActiveArticleIndex(0);
     }
 
     return (
@@ -85,7 +75,7 @@ function StartUpLists(){
 
         <>
         <div className="main_admin_part">
-            <header>
+            {/* <header>
                 <div className="admin_header">
                     <div className="container-fluid">
                         <div className="hd_searchbox">
@@ -93,27 +83,30 @@ function StartUpLists(){
                         </div>
                     </div>
                 </div>
-            </header>
+            </header> */}
+            <DashBoardHeader/>
             <section className="main_page update-list-content">
                 <Row>
                     <div className="pg_title">
                         <h3>Startup Updates</h3>
                     </div>
                     <div className="col-md-6">
+                        {
+                            updateInfos && updateInfos.length > 0 &&
                         
                         <div className="startup_info">
                             <div className="updt1_info">
-                                <img src={work180} alt="logo"/>
-                                <div className="link_part"><a href="/"><FaInternetExplorer color="#01bef5"/> <span>www.au.work180.co</span></a></div>
+                                <img src={ image_src } alt="logo"/>
+                                <div className="link_part"><a href={ site_link } target="_blank" rel="noreferrer"><FaInternetExplorer color="#01bef5"/> <span>{ site_link }</span></a></div>
                             </div>
                         </div>
-
+                        }
                         <div className="updt_tabs">
-                            {
-                                startUpHistoryEntries.map((val, idx) => <StartUpEntryTabItem key={idx} item={val} isActive={currentActiveArticle && currentActiveArticle.id === val.id} onItemClickHandler = {onClickEntryHandler}/>)
-                            }
+                        {
+                            updateDataProvider && updateDataProvider[currentPageIndex] && updateDataProvider[currentPageIndex].map((val, idx) => <StartUpEntryTabItem key={idx} item={val} isActive={idx === currentActiveArticleIndex} onItemClickHandler = {onClickEntryHandler}/>)
+                        }
                         </div>
-                        
+                        {updateInfos && 
                         <ReactPaginate
                             previousLabel={'previous'}
                             nextLabel={'next'}
@@ -127,20 +120,25 @@ function StartUpLists(){
                             nextClassName={'page-item'}
                             nextLinkClassName={'page-link'}
                             activeClassName={'active'}
-                            pageCount={3}
+                            pageCount={updateDataProvider.length}
                             marginPagesDisplayed={2}
                             pageRangeDisplayed={5}
                             onPageChange={onChangePage}
                             containerClassName={'pagination'}
-                            initialPage = {0}
-                            // forcePage={currentPageIndex}
+                            initialPage = {currentPageIndex}
+                            forcePage={currentPageIndex}
                         />
+                        }
                     </div>
                     <div className="col-md-6">
                     <div className="tab_content_main">
                         <div className="tab_inn_cont">
                             {
-                                <StartUpEntryTabContent item={currentActiveArticle && startUpHistoryDetails[currentActiveArticle.id - 1]}/>
+                                updateDataProvider && updateDataProvider[currentPageIndex] && updateDataProvider[currentPageIndex].map((val, idx) => {
+                                    if(idx === currentActiveArticleIndex){
+                                        return <StartUpEntryTabContent key={idx} item={val}/>
+                                    }
+                                })
                             }
                         </div>
                     </div>

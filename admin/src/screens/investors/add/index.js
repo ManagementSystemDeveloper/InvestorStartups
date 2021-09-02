@@ -21,7 +21,6 @@ function AddInvestor()
     const [showPass, setShowPass] = useState(false);
     const [validEmail, setIsValidEmail] = useState(false);
     const [pass, setPass] = useState('');
-    const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [user_name, setUserName] = useState('');
 
@@ -37,7 +36,6 @@ function AddInvestor()
         if(needFormClear)
         {
             setPass('');
-            setPhone('');
             setEmail('');
             setUserName('');
             dispatch({type:CREATE_DONE_SUCCESS, payload:false});
@@ -51,7 +49,6 @@ function AddInvestor()
 
     const onChangeText = (e) => {
         const {name, value} = e.target;
-        console.log(name);
         if(name === 'pass')
         {
             setPass(value);
@@ -60,11 +57,6 @@ function AddInvestor()
         {
             setEmail(value);
             setIsValidEmail(validator.isEmail(value));
-            console.log(validEmail);
-        }
-        else if(name === 'phone')
-        {
-            setPhone(value);
         }
         else if(name === 'user_name')
         {
@@ -92,13 +84,7 @@ function AddInvestor()
             return;
         }
 
-        if(phone.length === 0)
-        {
-            dispatch(toastActions.showToast("Enter the phone number"));
-            return;
-        }
-
-        dispatch(investorActions.createInvestor(user_name, email, pass, phone, token.accessToken));
+        dispatch(investorActions.createInvestor(user_name, email, pass, token.accessToken));
     }
 
     return (
@@ -125,7 +111,7 @@ function AddInvestor()
                     <Form.Label>Email</Form.Label>
                     {email.length > 0 ? 
                     <InputGroup hasValidation>
-                        <Form.Control type="email" className="txtbox"  name="email" value={email} onChange={(e) => onChangeText(e)} placeholder="joseph.smith@email.com" />    
+                        <Form.Control autoFocus type="email" className="txtbox"  name="email" value={email} onChange={(e) => onChangeText(e)} placeholder="joseph.smith@email.com" />    
                         <InputGroup.Text className="show-password-toggle">{validEmail ? <BsCheck style={{color:'#00ff00'}}></BsCheck> : <BsX style={{color:'#ff0000'}}></BsX>}</InputGroup.Text>
                     </InputGroup>
                     :
@@ -138,14 +124,6 @@ function AddInvestor()
                         <InputGroup hasValidation>
                             <Form.Control type={!showPass?"password":"text"} name="pass" value={pass} onChange={(e) => onChangeText(e)} className="txtbox" placeholder="***********" />
                             {pass.length > 0 && <Button onClick={onClickShowPassword} className="show-password-toggle">{showPass ? <BsFillEyeFill/> : <BsFillEyeSlashFill/>}</Button>}
-                        </InputGroup>
-                    </Form.Group>
-                    
-                    <Form.Group className="mb-3">
-                        <Form.Label>Phone Number</Form.Label>
-                        
-                        <InputGroup hasValidation>
-                            <Form.Control type="text" className="txtbox"  name="phone" value={phone} onChange={(e) => onChangeText(e)} placeholder="+1 111 111 1111" />    
                         </InputGroup>
                     </Form.Group>
 

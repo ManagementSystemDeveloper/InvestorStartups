@@ -90,7 +90,6 @@ function AllInvestors() {
                                     <th scope="col"></th>
                                     <th scope="col">User Name</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Mobile</th>
                                     <th scope="col"> Investments </th>
                                     <th scope="col"> Startups </th>
                                     <th scope="col"></th>

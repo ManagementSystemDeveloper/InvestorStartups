@@ -1,4 +1,4 @@
-import {AUTH_SAVE_TOKEN, AUTH_SAVE_USER, TOKEN_IN_LOCAL, USER_IN_LOCAL} from '../constants';
+import {AUTH_SAVE_TOKEN, AUTH_SAVE_USER, TOKEN_IN_LOCAL, USER_IN_LOCAL, AUTH_END_USER } from '../constants';
 
 function saveToken(token) {
     return (dispatch) => {
@@ -15,7 +15,17 @@ function saveUser(user)
     }
 }
 
+function removeToken()
+{
+    return (dispatch) => {
+        localStorage.removeItem(USER_IN_LOCAL);
+        localStorage.removeItem(TOKEN_IN_LOCAL);
+        return dispatch({type:AUTH_END_USER});
+    }
+}
+
 export const authActions = {
     saveToken,
-    saveUser
+    saveUser,
+    removeToken,
 };

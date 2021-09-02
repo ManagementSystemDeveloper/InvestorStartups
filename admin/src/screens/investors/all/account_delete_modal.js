@@ -17,7 +17,6 @@ function AccountDeleteModalDialog({defaultVal, closeHandler, account = null})
         
         if(showToast)
         {
-            console.log(showToast);
             toast.error(toastMsg);
             dispatch(toastActions.hideToast());
         }

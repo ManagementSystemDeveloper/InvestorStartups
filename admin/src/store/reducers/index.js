@@ -6,6 +6,8 @@ import { authReducer } from './auth.reducers';
 import { createReducer } from './create.reducer';
 import { investorsReducer } from './investors.reducers';
 import { companyReducer } from './company.reducers';
+import { investmentReducer } from './investments.reducers';
+import { updateReducer } from './update.reducer';
 
 const reducers = combineReducers({
     navReducer, 
@@ -15,6 +17,8 @@ const reducers = combineReducers({
     createReducer,
     investorsReducer,
     companyReducer,
+    investmentReducer,
+    updateReducer
 });
 
 export default reducers; 

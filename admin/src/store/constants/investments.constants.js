@@ -1,0 +1,2 @@
+export const INVESTMENT_LIST_ALL = "[INVESTMENT] LIST_ALL";   
+export const INVESTMENT_LIST = "[INVESTMENT] LIST"; 

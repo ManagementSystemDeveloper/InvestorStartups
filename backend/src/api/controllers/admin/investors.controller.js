@@ -1,6 +1,9 @@
 const httpStatus = require('http-status');
 const { omit } = require('lodash');
 const User = require('../../models/user.model');
+const Investment = require('../../models/investment.model');
+const StartUp = require('../../models/startup.model');
+const _  = require('lodash');
 exports.createUser = async (req, res, next) => {
     try {
       req.body.role = "user";
@@ -15,13 +18,21 @@ exports.createUser = async (req, res, next) => {
 
 exports.getAllUser = async (req, res, next) => {
   try {
+
     const users = await User.list(req.body);
-    const transformedUsers = users.map((user) => {
+
+    const transformedUsers = await Promise.all(users.map( async (user) => {
+      var startup_list = [];
       user = user.transform();
-      user.investments = 2;
-      user.startups = 2;
+      user.investments = await Investment.find({ unit_holder_id: user.id });
+
+      for(var i = 0; i < user.investments.length; i ++){
+        startup_list.push(user.investments[i].company_id);
+      }
+
+      user.startups = _.uniq(startup_list).length;
       return user;
-    });
+    }));
 
     res.json(transformedUsers);
   } catch (error) {

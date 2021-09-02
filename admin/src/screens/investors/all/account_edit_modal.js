@@ -12,7 +12,6 @@ function AccountEditModalDialog({defaultVal, closeHandler, account = null})
     const toastMsg = useSelector(state => state.toastReducer.toast_msg);
     
     const [validEmail, setIsValidEmail] = useState(true);
-    const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [user_name, setUserName] = useState('');
 
@@ -23,7 +22,6 @@ function AccountEditModalDialog({defaultVal, closeHandler, account = null})
     useEffect(() => {
         if(!isEdited && account)
         {
-            setPhone(account.phone);
             setEmail(account.email);
             setUserName(account.name);
         }
@@ -59,7 +57,7 @@ function AccountEditModalDialog({defaultVal, closeHandler, account = null})
             return;
         }
         
-        dispatch(investorActions.updateInvestor(token.accessToken, account.id, user_name, email, phone));
+        dispatch(investorActions.updateInvestor(token.accessToken, account.id, user_name, email));
         handleEditModalClose();
     }
 
@@ -71,11 +69,6 @@ function AccountEditModalDialog({defaultVal, closeHandler, account = null})
             setIsEdited(true);
             setEmail(value);
             setIsValidEmail(validator.isEmail(value));
-        }
-        else if(name === 'phone')
-        {
-            setIsEdited(true);
-            setPhone(value);
         }
         else if(name === 'user_name')
         {
@@ -110,12 +103,6 @@ function AccountEditModalDialog({defaultVal, closeHandler, account = null})
                         }
                     </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Mobile</Form.Label>
-                        
-                        <Form.Control type="text" className="txtbox" name="phone" value={phone} onChange={(e) => onChangeText(e)} placeholder="+1 111 111 1111" />    
-                        
-                    </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>

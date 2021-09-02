@@ -9,11 +9,15 @@ import CompanyDeleteModalDialog from './company_delete_modal';
 import {history} from '../../helpers';
 import DashBoardHeader from '../shared_comps/dashheader';
 import { toast } from 'react-toastify';
+import queryString from 'query-string';
 
 import './index.scss';
 import { NAV_STARTUP_ALL } from "../../store/constants";
 function CompanyAll()
 {
+    const startup_data = queryString.parse(window.location.href);
+    const user_id = startup_data[Object.keys(startup_data)[0]];
+
     const token = useSelector(state => state.authReducer.token);
     const companyInfos = useSelector(state => state.companyReducer.companies);
     const showToast = useSelector(state => state.toastReducer.toast_show);
@@ -23,10 +27,18 @@ function CompanyAll()
     const [showEditModal, setShowEditModal] = useState(false);
     const [firstLoad, setIsFirstLoad] = useState(true);
 
+    const [currentSelIdx, setCurrentSelIdx] = useState(-1);
+    const [bw, setBw] = useState(null);
+
     useEffect(() => {
         if(firstLoad)
         {
-            dispatch(companyActions.getAllCompany(token.accessToken));
+            if(user_id){
+                dispatch(companyActions.getCompanyByUserId(token.accessToken, user_id));
+                setBw(user_id);
+            } else {
+                dispatch(companyActions.getAllCompany(token.accessToken));
+            }
             setIsFirstLoad(false);
         }
 
@@ -48,15 +60,18 @@ function CompanyAll()
     }
 
     const onClickEditProfile = (index) => {
+        setCurrentSelIdx(index);
         setShowEditModal(true);
     }
 
     const onClickDeleteProfile = (index) => {
+        setCurrentSelIdx(index);
         setShowDeleteModal(true);
     }
 
     const onClickAddUpdateItem = (index) => {
-        history.push({pathname:'/update/edit'});
+        var query = '?startup=' + index;
+        history.push({pathname:'/update/edit', search: query});
     }
 
     const dispatch = useDispatch();
@@ -105,8 +120,8 @@ function CompanyAll()
                 </div>
             </section>
         
-            <CompanyDeleteModalDialog defaultVal={showDeleteModal} closeHandler={handleDeleteModalClose}/>
-            <CompanyEditModalDialog defaultVal={showEditModal} closeHandler={handleEditModalClose}/>
+            <CompanyDeleteModalDialog beginWhere={ bw } defaultVal={showDeleteModal} startup = {companyInfos.length > 0 ? companyInfos[currentSelIdx] : null} closeHandler={handleDeleteModalClose}/>
+            <CompanyEditModalDialog beginWhere={ bw } defaultVal={showEditModal} startup = {companyInfos.length > 0 ? companyInfos[currentSelIdx] : null} closeHandler={handleEditModalClose}/>
             <Footer/>
         </div>
         </>

@@ -50,7 +50,6 @@ function LogIn() {
 
     const onLoginFormSubmit = (e) => {
         e.preventDefault();
-        console.log('submit form');
         if(!validEmail)
         {
             dispatch(toastActions.showToast("You entered invalid email address"));

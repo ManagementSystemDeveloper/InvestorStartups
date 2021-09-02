@@ -7,3 +7,5 @@ export * from "./api.constants";
 export * from "./create.constants";
 export * from "./investors.constants";
 export * from "./companies.constants";
+export * from "./investments.constants";
+export * from "./updates.constants";

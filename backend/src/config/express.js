@@ -12,11 +12,16 @@ const strategies = require('./passport');
 const error = require('../api/middlewares/error');
 const fileUpload = require('express-fileupload');
 
+var path = require('path');
+var appDir = path.dirname('package.json');
+
 /**
 * Express instance
 * @public
 */
 const app = express();
+
+app.use('/uploads', express.static(appDir + '/uploads'));
 
 // request logging. dev: console | production: file
 app.use(morgan(logs));

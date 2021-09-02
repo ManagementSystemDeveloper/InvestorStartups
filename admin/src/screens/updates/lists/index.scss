@@ -4,10 +4,12 @@
     .updt1_info
     {
         max-width: 445px;
+        text-align: center;
         img
         {
             margin-bottom: 20px;
             max-width: 80%;
+            width: 180px;
         }
         .link_part
         {
@@ -33,7 +35,6 @@
 }
 
 .updt_tabs {
-    height: 726px;
     .updt_tab
     {
         border-bottom: 2px solid #232834;
@@ -69,13 +70,14 @@
             }
             .updt_content_body
             {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 3; /* number of lines to show */
+                -webkit-box-orient: vertical;
                 padding-top: 10px;
-                p
-                {
-                    color: #949ba9;
-                    font-size: 14px;
-                    text-align: justify;
-                }
+                color: #949ba9;
+                font-size: 14px;
             }
         }
 
@@ -143,11 +145,15 @@
         }   
         .email_tmplt
         {
-            padding: 45px 0;
-            img
-            {
-                max-width: 100%;
+            div {
+                width: 100%;
+                margin-bottom: 15px;
+                .feature_image {
+                    width: 100%;
+                }
             }
+            padding: 10px 0;
+            color: #949ba9;
         }
         .attachments
         {

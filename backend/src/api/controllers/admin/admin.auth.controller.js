@@ -26,7 +26,6 @@ exports.admin_login = async (req, res, next) => {
     const userTransformed = user.transform();
     return res.json({ token, user: userTransformed });
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 };

@@ -4,6 +4,7 @@ import {LOGIN_URL} from './../constants/api.constants';
 import { authActions } from "./auth.actions";
 import {history} from '../../helpers/history';
 
+
 function login(email, password) {
     return (dispatch) => {
         dispatch(loadingActions.showLoading("login start"));
@@ -26,6 +27,14 @@ function login(email, password) {
     };
 }
 
+function logout() {
+    return (dispatch) => {
+        dispatch(authActions.removeToken());
+        history.push({pathname:'/login'});
+    }
+}
+
 export const loginActions = {
-    login
+    login,
+    logout,
 };
