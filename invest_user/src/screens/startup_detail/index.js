@@ -1,69 +1,80 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashBoardHeader from "../shared_comps/dashheader";
 import Footer from "../shared_comps/footer";
-import work180 from "../../assets/imgs/work180.png";
-
-import www from '../../assets/imgs/www.png';
 import './index.scss';
 import {Row} from 'react-bootstrap';
 import StartUpEntryTabItem from './tab_item';
 import StartUpEntryTabContent from './tab_content';
+import { useDispatch, useSelector } from "react-redux";
 import ReactPaginate from 'react-paginate';
 import {FaInternetExplorer} from 'react-icons/fa';
+import queryString from 'query-string';
+import { investmentActions } from "../../store/actions/index";
+import { IMAGE_URL } from '../../store/constants';
+import _ from 'lodash';
+
 function StartUpDetails(){
-    const [currentActiveArticle, setCurrentActiveArticle] = useState(null);
 
-    const startUpHistoryEntries = [
+    const company_data = queryString.parse(window.location.href);
+    const company_id = company_data[Object.keys(company_data)[0]];
+    const userdata = useSelector(state => state.authReducer.user);
+
+    const token = useSelector(state => state.authReducer.token);
+    const investmentInfos = useSelector(state => state.investmentReducer.investments);
+    const needUpdateDataProvider = useSelector(state => state.investmentReducer.needRefresh);
+
+    const [updateInfos, setUpdateInfos] = useState([]);
+    const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const [currentActiveArticleIndex, setCurrentActiveArticleIndex] = useState(0);
+    const [isFirstLaunch, setIsFirstLaunch] = useState(true);
+    const [updateDataProvider, setUpdateDataProvider] = useState([]);
+    const [image_src, setImageSrc] = useState('');
+    const [site_link, setSiteLink] = useState('');
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if(isFirstLaunch)
         {
-            id:'1',
-            name:'WORK180 December 2018 Report',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
-        },
-        {
-            id:'2',
-            name:'WORK180 December 2018 Report',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
-        },
-        {
-            id:'3',
-            name:'WORK180 December 2018 Report',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
+            dispatch(investmentActions.getInvestmentByUserId(token.accessToken, userdata.id));
+            setIsFirstLaunch(false);
         }
 
-    ];
-
-
-    const startUpHistoryDetails = [
+        if(needUpdateDataProvider)
         {
-            id:'1',
-            name:'WORK180 December 2018 Report',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
-        },
-        {
-            id:'2',
-            name:'Unique Experience',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
-        },
-        {
-            id:'3',
-            name:'Crafting Virtual World',
-            date:'14 APRIL, 4:23 PM',
-            short_desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum fringilla, leo at posuere fringilla, nisl nisl dapibus ligula, sit amet euismod urna quam ut lacus.'
+            var update_arr = [];
+            for (let i = 0; i < investmentInfos.length; i++) {
+                const investmentInfo = investmentInfos[i];
+                
+                if(investmentInfo.company_id === company_id){
+                    for (let j = 0; j < investmentInfo.update_detail.length; j++) {
+                        investmentInfo.update_detail[j].company_detail = investmentInfo.company_detail;
+                        update_arr.push(investmentInfo.update_detail[j]);
+                    }
+                }
+            }
+            setUpdateInfos(update_arr);
+            setUpdateDataProvider(_.chunk(update_arr, 3));
+            dispatch(investmentActions.stopUpdateUI());
+            setCurrentPageIndex(0);
         }
-    ];
+
+        if(updateInfos && updateInfos.length > 0 && updateDataProvider && updateDataProvider.length > 0) {
+            const image_url = IMAGE_URL + updateDataProvider[currentPageIndex][currentActiveArticleIndex].company_detail.logo;
+            const link_address = updateDataProvider[currentPageIndex][currentActiveArticleIndex].company_detail.website;
+            setImageSrc(image_url);
+            setSiteLink(link_address);
+        }
+    });
 
     const onClickEntryHandler = (item) => {
-        setCurrentActiveArticle(item);
+        const activeIndex = _.findIndex(updateDataProvider[currentPageIndex], ['_id', item._id]);
+        setCurrentActiveArticleIndex(activeIndex);
     }
 
-
     const onChangePage = (pageIndex) => {
-        
+        setCurrentPageIndex(pageIndex.selected);
+        setCurrentActiveArticleIndex(0);
     }
 
     return (
@@ -78,19 +89,21 @@ function StartUpDetails(){
                     <div className="pg_title">
                         <h3>Startup Updates</h3>
                     </div>
-                    <div className="startup_info">
-                        <div className="updt1_info">
-                            <img src={work180} alt="logo"/>
-                            <div className="link_part"><a href="/"><FaInternetExplorer color="#01bef5"/> <span>www.au.work180.co</span></a></div>
+                    {
+                        updateInfos && updateInfos.length > 0 &&    
+                        <div className="startup_info">
+                            <div className="updt1_info">
+                                <img src={ image_src } alt="logo"/>
+                                <div className="link_part"><a target="_blank" rel="noreferrer" href={ site_link }><FaInternetExplorer color="#01bef5"/> <span>{ site_link }</span></a></div>
+                            </div>
                         </div>
-                    </div>
-
+                    }
                     <div className="updt_tabs">
                         {
-                            startUpHistoryEntries.map((val, idx) => <StartUpEntryTabItem key={idx} item={val} isActive={currentActiveArticle && currentActiveArticle.id === val.id} onItemClickHandler = {onClickEntryHandler}/>)
+                            updateDataProvider && updateDataProvider[currentPageIndex] && updateDataProvider[currentPageIndex].map((val, idx) => <StartUpEntryTabItem key={idx} item={val} isActive={idx === currentActiveArticleIndex} onItemClickHandler = {onClickEntryHandler}/>)
                         }
                     </div>
-                    
+                    {updateInfos && 
                     <ReactPaginate
                         previousLabel={'previous'}
                         nextLabel={'next'}
@@ -104,20 +117,25 @@ function StartUpDetails(){
                         nextClassName={'page-item'}
                         nextLinkClassName={'page-link'}
                         activeClassName={'active'}
-                        pageCount={3}
+                        pageCount={updateDataProvider.length}
                         marginPagesDisplayed={2}
                         pageRangeDisplayed={5}
                         onPageChange={onChangePage}
                         containerClassName={'pagination'}
-                        initialPage = {0}
-                        // forcePage={currentPageIndex}
+                        initialPage = {currentPageIndex}
+                        forcePage={currentPageIndex}
                     />
+                    }
                 </div>
                 <div className="col-md-6">
                     <div className="tab_content_main">
                         <div className="tab_inn_cont">
                             {
-                                <StartUpEntryTabContent item={currentActiveArticle && startUpHistoryDetails[currentActiveArticle.id - 1]}/>
+                                updateDataProvider && updateDataProvider[currentPageIndex] && updateDataProvider[currentPageIndex].map((val, idx) => {
+                                    if(idx === currentActiveArticleIndex){
+                                        return <StartUpEntryTabContent key={idx} item={val}/>
+                                    }
+                                })
                             }
                         </div>
                     </div>

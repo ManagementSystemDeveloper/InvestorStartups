@@ -1,18 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import tab_1 from "../../assets/imgs/tab_1.png";
-function InvestHistoryTable()
-{
-    const array1 = [0,1,2,3,4];
-    const getTableItem = (index) => {
-        
-        return (<tr key={index}>
-                        <td>Feb 14, 2018</td>
-                        <td>$ 20000.00</td>
-                        <td>20,000 B Class Units</td>
-                        <td>5,714 Series Seed Preference Shares in Work180 Pty Ltd</td>
-                        <td><img src={tab_1} alt="company-logo"/></td>
-                    </tr>);
+import { IMAGE_URL } from '../../store/constants';
+
+function InvestHistoryTable({investments})
+{ 
+    const getTableItem = (investment, index) => {
+        return (
+          <tr key={index}>
+            <td>{ investment.issue_date }</td>
+            <td>$ { investment.units }</td>
+            <td>{ investment.units } { investment.class_of_unit } Class Units</td>
+            <td>{ investment.shares } { investment.underlying_share_class } { investment.company_detail.name }</td>
+            <td><img width="150" height="100" src={ IMAGE_URL + investment.company_detail.logo } alt="company-logo"/></td>
+          </tr>
+        );
     }
     return (
     <div className="user_history table-responsive">
@@ -27,8 +27,8 @@ function InvestHistoryTable()
         </tr>
       </thead>
       <tbody>
-        {
-          array1.map((idx, value) => getTableItem(idx))
+        { investments && investments.length > 0 &&
+          investments.map((investment, idx) => getTableItem(investment, idx))
         }
       </tbody>
     </table>

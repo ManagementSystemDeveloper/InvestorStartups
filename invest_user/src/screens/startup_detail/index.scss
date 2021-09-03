@@ -1,13 +1,19 @@
+.pg_title {
+    h3 {
+        padding-top: 0px;;
+    }
+}
 .startup_info
 {
     padding-top: 30px;
     .updt1_info
     {
         max-width: 425px;
+        text-align: center;
         img
         {
             margin-bottom: 25px;
-            max-width: 100%;
+            width: 180px;
         }
         .link_part
         {
@@ -33,11 +39,10 @@
 }
 
 .updt_tabs {
-    height: 726px;
     .updt_tab
     {
         border-bottom: 2px solid #232834;
-        padding: 50px 0;
+        padding: 30px 0;
         position: relative;
         cursor: pointer;
         .updt_content_part
@@ -69,13 +74,14 @@
             }
             .updt_content_body
             {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 3; /* number of lines to show */
+                -webkit-box-orient: vertical;
                 padding-top: 10px;
-                p
-                {
-                    color: #949ba9;
-                    font-size: 14px;
-                    text-align: justify;
-                }
+                color: #949ba9;
+                font-size: 14px;
             }
         }
 
@@ -117,7 +123,8 @@
 {
     background: #2c3340;
     padding: 45px;
-    height: 900px;
+    margin-top: 80px;
+    min-height: 620px;
     overflow: auto;
     .tab_changed_cont
     {
@@ -138,11 +145,8 @@
         }   
         .email_tmplt
         {
-            padding: 45px 0;
-            img
-            {
-                max-width: 100%;
-            }
+            padding: 10px 0;
+            color: #949ba9;
         }
         .attachments
         {
@@ -166,4 +170,8 @@
     {
         display: block;
     }
+}
+
+footer {
+    margin-top: 30px;
 }

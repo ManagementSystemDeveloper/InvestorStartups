@@ -60,6 +60,7 @@ exports.changeUserPassword = async (req, res, next) => {
     res.status(httpStatus.OK);
     return res.json('Password Updated');
   } catch (error) {
+    console.log(error);
     return next(error);
   }
 }

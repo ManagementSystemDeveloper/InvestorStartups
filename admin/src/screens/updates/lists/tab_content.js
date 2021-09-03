@@ -20,6 +20,7 @@ function StartUpEntryTabContent({item}) {
 
         if(download_button)
         {
+            console.log(item.id);
             dispatch(updateAction.download_file(token.accessToken, item.id, filename));
             setDownloadButton(false);
         }

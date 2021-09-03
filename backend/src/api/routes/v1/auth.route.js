@@ -9,6 +9,7 @@ const {
   refresh,
   sendPasswordReset,
   passwordReset,
+  passwordUpdation,
 } = require('../../validations/auth.validation');
 
 const router = express.Router();
@@ -19,6 +20,9 @@ router.route('/register')
 router.route('/user-login')
   .post(validate(login), controller.user_login);
 
+router.route('/change-password')
+  .post(validate(passwordUpdation), controller.changePassword);
+
 router.route('/user-refresh-token')
   .post(validate(refresh), controller.refresh);
 
@@ -27,6 +31,7 @@ router.route('/user-send-password-reset')
 
 router.route('/user-reset-password')
   .post(validate(passwordReset), controller.resetPassword);
+
 // router.route('/google')
 //   .post(validate(oAuth), oAuthLogin('google'), controller.oAuth);
 

@@ -1,20 +1,40 @@
-import React, { useState } from "react";
-import logo from './../../assets/imgs/logo.png';
+import React, { useState, useEffect } from "react";
+import logo from './../../assets/images/logo.png';
 import { Link } from "react-router-dom";
 import {Container, Form, InputGroup, Button} from 'react-bootstrap';
 import './index.scss';
 import {BsFillEyeFill, BsFillEyeSlashFill, BsCheck, BsX} from 'react-icons/bs';
+import { useDispatch, useSelector } from "react-redux";
 import Footer from "../shared_comps/footer";
 import DashBoardHeader from "../shared_comps/dashheader";
+import { loginActions, toastActions } from "../../store/actions";
+import { toast } from 'react-toastify';
+
 function ChangePassword() {
 
-    const [showOldPass, setShowOldPass] = useState(false);
-    const [showNewPass, setShowNewPass] = useState(false);
-    const [showConfirmPass, setShowConfirmPass] = useState(false);
+    const userdata = useSelector(state => state.authReducer.user);
+    const token = useSelector(state => state.authReducer.token);
+    const showLoading = useSelector(state => state.loadingReducer.loading_show);
+    const showToast = useSelector(state => state.toastReducer.toast_show);
+    const toastMsg = useSelector(state => state.toastReducer.toast_msg);
+
+    const [showOldPass, setShowOldPass] = useState(true);
+    const [showNewPass, setShowNewPass] = useState(true);
+    const [showConfirmPass, setShowConfirmPass] = useState(true);
 
     const [oldPass, setOldPass] = useState('');
     const [newPass, setNewPass] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if(showToast)
+        {
+            toast.error(toastMsg);
+            dispatch(toastActions.hideToast());
+        }
+    }, [showToast, toastMsg]);
 
     const onClickShowOldPassword = () => {
         setShowOldPass(!showOldPass);
@@ -42,6 +62,32 @@ function ChangePassword() {
         {
             setConfirmPass(value);
         }
+    }
+
+    const onFormSubmit = (e) => {
+        e.preventDefault();
+        
+        if(oldPass.length === 0)
+        {
+            dispatch(toastActions.showToast("Enter the current password"));
+            return;
+        }
+        if(newPass.length === 0)
+        {
+            dispatch(toastActions.showToast("Enter the new password"));
+            return;
+        }
+        if(confirmPass.length === 0)
+        {
+            dispatch(toastActions.showToast("Enter the confirm password"));
+            return;
+        }
+        if(newPass !== confirmPass){
+            dispatch(toastActions.showToast("Password does not match"));
+            return;
+        }
+
+        dispatch(loginActions.changePassword(token.accessToken, userdata.id, newPass));
     }
 
 
@@ -78,7 +124,7 @@ function ChangePassword() {
                     </InputGroup>
                 </Form.Group>
     
-                <Button className="submit_btn login_btn"> <span className="spinner-border spinner-border-sm mr-2"></span> Change Password </Button>
+                <Button onClick={onFormSubmit} className="submit_btn login_btn" disabled = {showLoading}> {showLoading && <span className="spinner-border spinner-border-sm mr-2"></span>} Change Password </Button>
                     
 
                 <Link to="/login" className="forgotpwd"> Back to log in </Link>

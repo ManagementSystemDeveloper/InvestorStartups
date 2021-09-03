@@ -53,6 +53,20 @@ exports.user_login = async (req, res, next) => {
   }
 };
 
+exports.changePassword = async (req, res, next) => {
+  try {
+    const { id, password } = req.body;
+    const user = await User.findById(id);
+    user.password = password;
+    await user.save();
+    res.status(httpStatus.OK);
+    return res.json('Password Updated');
+  } catch (error) {
+    console.log(error);
+    return next(error);
+  }
+};
+
 /**
  * login with an existing user or creates a new one if valid accessToken token
  * Returns jwt token

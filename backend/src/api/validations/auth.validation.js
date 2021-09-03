@@ -66,4 +66,17 @@ module.exports = {
       resetToken: Joi.string().required(),
     },
   },
+
+  // POST /v1/auth/change-password
+  passwordUpdation: {
+    body: {
+      id: Joi.string()
+        .required(),
+      password: Joi.string()
+        .required()
+        .min(6)
+        .max(128)
+    },
+  },
+  
 };

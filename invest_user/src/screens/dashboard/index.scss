@@ -30,6 +30,10 @@ table.history_table
     }
 }
 
+h6 {
+    color: #fff;
+}
+
 .table-striped>tbody>tr:nth-of-type(odd) {
     background-color: #1f2430 !important;
 }
@@ -54,9 +58,9 @@ table.history_table
         }
         .updt_dt
         {
-            padding-left: 25px;
+            padding-left: 50px;
             color: #949ba9;
-            font-size: 12px;
+            font-size: 15px;
             vertical-align: bottom;
         }
     }
@@ -69,15 +73,19 @@ table.history_table
             font-weight: 600;
             font-size: 18px;
             margin: 0;
-            padding-top: 28px;
             padding-bottom: 16px;
         }
-        p
+        div
         {
             color: #949ba9;
             font-size: 14px;
             text-align: justify;
             line-height: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
         }
         .updt_link
         {

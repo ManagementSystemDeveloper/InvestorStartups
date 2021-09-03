@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo from './../../assets/imgs/logo.png';
+import logo from './../../assets/images/logo.png';
 import { Link } from "react-router-dom";
 import {Container, Form, InputGroup, Button} from 'react-bootstrap';
 import './index.scss';
